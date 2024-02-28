@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  mongo-db:
+    build:
+      context: ./Backend/MongoDB
+      dockerfile: Dockerfile
+    container_name: mongo-db
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.2
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 12345
+    ports:
+      - "27017:27017"
+
+  express-app:
+    build:
+      context: ./Backend/Express-App
+      dockerfile: Dockerfile
+    container_name: express-api
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.3
+    ports:
+      - "8000:3000"
+    depends_on:
+      - mongo-db
+  
+  react-app:
+    build:
+      context: ./Frontend/React-App
+      dockerfile: Dockerfile
+    container_name: react-app
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.4
+    ports:
+      - "3000:3000"
+    depends_on:
+      - express-app
+
+networks:
+  mynetwork:
+    name: GSMS-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/16
