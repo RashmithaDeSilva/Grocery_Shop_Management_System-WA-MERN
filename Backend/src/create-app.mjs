@@ -1,5 +1,6 @@
 import express from "express";
 import fs from 'fs';
+import router from "./routes/router.mjs";
 
 
 export function createApp() {
@@ -8,6 +9,7 @@ export function createApp() {
 
     const app = express();
     app.use(express.json());
+    app.use(router);
 
     return app;
 }
