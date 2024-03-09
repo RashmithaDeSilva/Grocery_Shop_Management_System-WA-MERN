@@ -9,7 +9,7 @@ const ENV_VEB = JSON.parse(jsonData);
 const app = createApp();
 const PORT = process.env.PORT || ENV_VEB.port;
 
-mongoose.connect(`mongodb://${ ENV_VEB.db.ip }/${ ENV_VEB.db.port }/${ ENV_VEB.db.name }`)
+mongoose.connect(`mongodb://${ ENV_VEB.db.ip }:${ ENV_VEB.db.port }/${ ENV_VEB.db.name }`)
     .then(() => console.log('[INFO] - Connected to Database'))
     .catch(e => console.log(`[ERROR] - ${ e } !`))
 ;

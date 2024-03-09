@@ -1,33 +1,38 @@
 import mongoose from "mongoose";
-import uuid from "uuid";
 
 
-const UsreSchema = new mongoose.Schema({
-    _id: {
-        type: mongoose.Schema.Types.String,
-        default: () => "U_" + uuid.v4(),
-        required: true,
-        unique: true,
-    },
+const UserSchema = new mongoose.Schema({
+    // id: {
+    //     type: mongoose.Schema.Types.String,
+    //     default: () => "U_" + new mongoose.Types.ObjectId().toString(),
+    //     required: true,
+    //     unique: true
+    // },
     username: {
         type: mongoose.Schema.Types.String,
         required: true,
-    },
-    email: {
-        type: mongoose.Schema.Types.String,
-        required: true,
-        unique: true,
+        unique: true
     },
     password: {
         type: mongoose.Schema.Types.String,
-        required: true,
+        required: true
     },
     title: {
         type: mongoose.Schema.Types.Number,
-        required: true,
+        required: true
     },
     banded: {
         type: mongoose.Schema.Types.Boolean,
-        required: true,
+        required: true
+    },
+    contactnuber: {
+        type: mongoose.Schema.Types.Number
+    },
+    email: {
+        type: mongoose.Schema.Types.String,
+        unique: true
     }
 });
+
+
+export const User = mongoose.model("User", UserSchema);

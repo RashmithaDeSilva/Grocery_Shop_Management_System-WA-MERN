@@ -134,6 +134,34 @@ export const bandedValidetionSchema = {
                 value: "BANDED", 
                 error: "Banded is not boolean !"
             }
-        },
+        }
     }
 };
+
+export const filterValidetionSchema = {
+    filter: {
+        isString: {
+            errorMessage: {
+                value: "FILTER", 
+                error: "Filter is not string !"
+            }
+        },
+        notEmpty: { 
+            errorMessage: {
+                value: "FILTER", 
+                error: "Filter canot empty !"
+            }
+        }
+    }
+}
+
+export const valueValidetionSchema = {
+    value: {
+        notEmpty: { 
+            errorMessage: {
+                value: "VALUE", 
+                error: "Value canot empty !"
+            }
+        }
+    }
+}
