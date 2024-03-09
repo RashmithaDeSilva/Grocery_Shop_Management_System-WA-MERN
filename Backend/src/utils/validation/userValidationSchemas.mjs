@@ -165,3 +165,20 @@ export const valueValidetionSchema = {
         }
     }
 }
+
+export const limitValidetionSchema = {
+    limit: {
+        isInt: {
+            errorMessage: {
+                value: "LIMITE", 
+                error: "Limit is not int !"
+            }
+        },
+        notEmpty: { 
+            errorMessage: {
+                value: "LIMITE", 
+                error: "Limit canot empty !"
+            }
+        }
+    }
+}
