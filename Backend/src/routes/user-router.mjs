@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { query, validationResult, matchedData, checkSchema } from "express-validator"
+import { validationResult, matchedData, checkSchema } from "express-validator"
 import { userValidations } from "../utils/validation/validationSchema.mjs";
 import { User } from "../mongoose/schemas/user.mjs";
 import { hashPassword } from "../utils/hash.mjs";
+import getNewResData from "../utils/responseData.mjs"
 
 
 const router = Router();
@@ -24,19 +25,19 @@ async (req, res) => {
         const { query: { filter, value, limit }} = req;
 
         if(filter !== undefined && filter !== null && result.errors.filter((e) => e.msg.value === "FILTER").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
-
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+        
         if(value !== undefined && value !== null && result.errors.filter((e) => e.msg.value === "VALUE").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(limit === undefined && result.errors.filter((e) => e.msg.value === "LIMITE").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
  
         let newLimit = (limit === "0") ? 10 : limit;
 
         if(Object.keys(data).length === 1) {
             const users = await User.find().select('-password').limit(newLimit);
-            return res.status(200).send(users);
+            return res.status(200).send(getNewResData(true, true, "Successful request", 200, users));
 
         } else if(Object.keys(data).length === 3) {
             const mongoQuery = {};
@@ -48,32 +49,42 @@ async (req, res) => {
             }
             
             const users = await User.find(mongoQuery).select('-password').limit(newLimit);
-            return res.status(200).send(users);
+            return res.status(200).send(getNewResData(true, true, "Successful request", 200, users));
         }
         
         
-        return res.status(404).send({ msg: "Invalid quarts !"});
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
     
     } catch(e) {
-        return res.status(400).send(e);
+        return res.status(400).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: e }));
     }
 
 });
 
-router.get("/api/auth/users/:username", async (req, res) => {
+// 
+router.get("/api/auth/users/:username", 
+[
+    checkSchema(userValidations.usernameValidetionSchema)
+],
+async (req, res) => {
 
     try {
 
-        const userName = req.params.username;
-        if(userName === undefined) return res.status(404).send({ msg: "Invalid quarts !"});
-        
-        const user = await User.findOne({ username: userName }).select('-password');
-        if(user !== null) return res.status(200).send({ user: user});
+        const result = validationResult(req);
+        const data = matchedData(req);
 
-        return res.status(404).send({ msg: "Invalid quarts !"});
+        if(result.errors.filter((e) => e.msg.value === "USERNAME").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+
+        if(data.username === undefined || data.username === null) return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+
+        const user = await User.findOne({ username: data.username }).select('-password');
+        if(user !== null) return res.status(200).send(getNewResData(true, true, "Successful request", 200, { user: user }));
+
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
     
     } catch(e) {
-        return res.status(400).send(e);
+        return res.status(400).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: e }));
     }
 
 });
@@ -95,22 +106,22 @@ async (req, res) => {
         const data = matchedData(req);
 
         if(result.errors.filter((e) => e.msg.value === "USERNAME").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(result.errors.filter((e) => e.msg.value === "PASSWORD").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(result.errors.filter((e) => e.msg.value === "TITLE").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(result.errors.filter((e) => e.msg.value === "BANDED").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(data.contactnuber && result.errors.filter((e) => e.msg.value === "CONTACTNUMBER").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(req.body.email !== undefined && result.errors.filter((e) => e.msg.value === "EMAIL").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
             
         data.password = hashPassword(data.password);
@@ -118,10 +129,10 @@ async (req, res) => {
         const saveUser = await newUser.save();
         const userWithoutPassword = { ...saveUser._doc };
         delete userWithoutPassword.password;
-        return res.status(201).send({ msg: "Successfully added user", userWithoutPassword });
+        return res.status(201).send(getNewResData(true, true, "Successfully added user", 200, { user: userWithoutPassword }));
     
     } catch(e) {
-        return res.status(400).send(e);
+        return res.status(400).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: e }));
     }
 
 });
@@ -143,30 +154,30 @@ async (req, res) => {
         const data = matchedData(req);
 
         if(result.errors.filter((e) => e.msg.value === "USERNAME").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(req.body.password !== undefined && result.errors.filter((e) => e.msg.value === "PASSWORD").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(result.errors.filter((e) => e.msg.value === "TITLE").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(result.errors.filter((e) => e.msg.value === "BANDED").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(data.contactnuber && result.errors.filter((e) => e.msg.value === "CONTACTNUMBER").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(req.body.email !== undefined && result.errors.filter((e) => e.msg.value === "EMAIL").length !== 0)
-        return res.status(404).send(result.errors.map((e) => e.msg.error));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(data.password !== undefined) data.password = hashPassword(data.password);
         await User.findByIdAndUpdate(req.body._id, data);
         const updateUser = await User.find({ _id: req.body._id }).select('-password').limit(1);
-        return res.status(204).send({ msg: "Successfully update user", updateUser: updateUser[0] });
+        return res.status(204).send(getNewResData(true, true, "Successfully update user", 200, { user: updateUser[0] }));
     
     } catch(e) {
-        return res.status(400).send(e);
+        return res.status(400).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: e }));
     }
 
 });

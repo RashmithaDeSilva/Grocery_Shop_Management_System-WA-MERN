@@ -1,6 +1,7 @@
 import { Router } from "express";
 import authRouter from "./auth-router.mjs";
 import userRouter from "./user-router.mjs";
+import getNewResData from "../utils/responseData.mjs"
 
 
 const router = Router();
@@ -9,11 +10,15 @@ router.use(userRouter);
 
 
 router.get("/", (req, res) => {
-    return res.status(200).send("Grocery Shop Management System WA [MERN]");
+    return res.status(200).send(getNewResData(true, false, "Grocery Shop Management System WA [MERN]", 200, []));
 });
 
 router.get("/api", (req, res) => {
     return res.redirect("/");
+});
+
+router.all("*", (req, res) => {
+    return res.status(404).send(getNewResData(false, false, "Page Not Found !", 404, []));
 });
 
 
