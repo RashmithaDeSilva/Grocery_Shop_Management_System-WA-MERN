@@ -41,12 +41,11 @@ export const passwordValidetionSchema = {
         },
         isLength: {
             options: {
-                min: 5,
-                max: 20
+                min: 5
             },
             errorMessage: {
                 value: "PASSWORD", 
-                error: "Password must be at least 5 - 20 characters !"
+                error: "Password must be at least 5 characters !"
             }
         }
     }
