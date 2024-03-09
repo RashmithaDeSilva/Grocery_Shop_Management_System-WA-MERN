@@ -9,7 +9,7 @@ const router = Router();
 
 
 // Only use super admin
-router.get("/api/auth/usermanagement", 
+router.get("/api/auth/users", 
 [ 
     checkSchema(userValidations.filterValidetionSchema), 
     checkSchema(userValidations.valueValidetionSchema),
@@ -60,8 +60,26 @@ async (req, res) => {
 
 });
 
+router.get("/api/auth/users/:username", async (req, res) => {
+
+    try {
+
+        const userName = req.params.username;
+        if(userName === undefined) return res.status(404).send({ msg: "Invalid quarts !"});
+        
+        const user = await User.findOne({ username: userName }).select('-password');
+        if(user !== null) return res.status(200).send({ user: user});
+
+        return res.status(404).send({ msg: "Invalid quarts !"});
+    
+    } catch(e) {
+        return res.status(400).send(e);
+    }
+
+});
+
 // Only use super admin
-router.post("/api/auth/usermanagement/newuser", 
+router.post("/api/auth/users/newuser", 
 [
     checkSchema(userValidations.usernameValidetionSchema),
     checkSchema(userValidations.passwordValidetionSchema),
@@ -109,7 +127,7 @@ async (req, res) => {
 });
 
 // Only use super admin
-router.patch("/api/auth/usermanagement/updateuser", 
+router.patch("/api/auth/users/updateuser", 
 [
     checkSchema(userValidations.usernameValidetionSchema),
     checkSchema(userValidations.passwordValidetionSchema),
@@ -145,7 +163,7 @@ async (req, res) => {
         if(data.password !== undefined) data.password = hashPassword(data.password);
         await User.findByIdAndUpdate(req.body._id, data);
         const updateUser = await User.find({ _id: req.body._id }).select('-password').limit(1);
-        return res.status(201).send({ msg: "Successfully update user", updateUser: updateUser[0] });
+        return res.status(204).send({ msg: "Successfully update user", updateUser: updateUser[0] });
     
     } catch(e) {
         return res.status(400).send(e);
