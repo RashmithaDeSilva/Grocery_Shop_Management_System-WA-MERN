@@ -3,6 +3,7 @@ import fs from "fs";
 import session from "express-session";
 import passport from "passport";
 import router from "./routes/router.mjs";
+import "./strategies/local-stratagy.mjs"
 
 
 export function createApp() {
@@ -15,7 +16,9 @@ export function createApp() {
         secret: ENV_VEB.SESION_SECRET,
         saveUninitialized: false,
         resave: false,
-        cookie: ENV_VEB.COOKIE_TIME
+        cookie: {
+            maxAge: ENV_VEB.COOKIE_TIME
+        }
     }));
     app.use(passport.initialize());
     app.use(passport.session());

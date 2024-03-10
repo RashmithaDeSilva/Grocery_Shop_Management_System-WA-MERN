@@ -56,7 +56,7 @@ async (req, res) => {
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
     
     } catch(e) {
-        return res.status(400).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: e }));
+        return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
     }
 
 });
@@ -84,7 +84,7 @@ async (req, res) => {
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
     
     } catch(e) {
-        return res.status(400).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: e }));
+        return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
     }
 
 });
@@ -132,7 +132,7 @@ async (req, res) => {
         return res.status(201).send(getNewResData(true, true, "Successfully added user", 200, { user: userWithoutPassword }));
     
     } catch(e) {
-        return res.status(400).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: e }));
+        return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
     }
 
 });
@@ -177,7 +177,7 @@ async (req, res) => {
         return res.status(204).send(getNewResData(true, true, "Successfully update user", 200, { user: updateUser[0] }));
     
     } catch(e) {
-        return res.status(400).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: e }));
+        return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
     }
 
 });

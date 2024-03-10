@@ -5,11 +5,13 @@ import getNewResData from "../utils/responseData.mjs"
 
 
 const router = Router();
-// router.use(authRouter);
+router.use(authRouter);
 router.use(userRouter);
 
 
 router.get("/", (req, res) => {
+    console.log(req.session);
+    console.log(req.session.id);
     return res.status(200).send(getNewResData(true, false, "Grocery Shop Management System WA [MERN]", 200, []));
 });
 

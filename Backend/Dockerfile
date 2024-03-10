@@ -11,7 +11,7 @@ COPY package*.json .
 RUN npm install
 
 # Install Express and Express Validation
-RUN npm install express nodemon express-validator cookie-parser express-session passport passport-local mongoose bcrypt uuid
+RUN npm install express nodemon mongoose bcrypt express-validator express-session passport passport-local
 
 # Copy the rest of the application code
 COPY ./src .
