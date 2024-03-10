@@ -1,5 +1,7 @@
 import express from "express";
-import fs from 'fs';
+import fs from "fs";
+import session from "express-session";
+import passport from "passport";
 import router from "./routes/router.mjs";
 
 
@@ -9,6 +11,14 @@ export function createApp() {
 
     const app = express();
     app.use(express.json());
+    app.use(session({
+        secret: ENV_VEB.SESION_SECRET,
+        saveUninitialized: false,
+        resave: false,
+        cookie: ENV_VEB.COOKIE_TIME
+    }));
+    app.use(passport.initialize());
+    app.use(passport.session());
     app.use(router);
 
     return app;

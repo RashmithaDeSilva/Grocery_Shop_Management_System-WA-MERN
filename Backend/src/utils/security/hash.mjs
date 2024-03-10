@@ -1,7 +1,10 @@
 import bcrypt from 'bcrypt';
+import fs from 'fs';
 
 
-const saltRounds = 10;
+const jsonData = fs.readFileSync('env-veb.json', 'utf-8');
+const ENV_VEB = JSON.parse(jsonData);
+const saltRounds = ENV_VEB.SALT_ROUNDS;
 
 
 export const hashPassword = (password) => {
