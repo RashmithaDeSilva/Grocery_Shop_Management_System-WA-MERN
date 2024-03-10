@@ -3,6 +3,8 @@ import fs from "fs";
 import session from "express-session";
 import passport from "passport";
 import router from "./routes/router.mjs";
+import mongoose from "mongoose";
+import MongoStore from "connect-mongo";
 import "./strategies/local-stratagy.mjs"
 
 
@@ -15,10 +17,13 @@ export function createApp() {
     app.use(session({
         secret: ENV_VEB.SESION_SECRET,
         saveUninitialized: false,
-        resave: false,
+        resave: true,
         cookie: {
-            maxAge: ENV_VEB.COOKIE_TIME
-        }
+            maxAge: ENV_VEB.COOKIE_TIME,
+        },
+        store: MongoStore.create({
+            client: mongoose.connection.getClient(),
+        }),
     }));
     app.use(passport.initialize());
     app.use(passport.session());
