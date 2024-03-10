@@ -18,6 +18,7 @@ export function createApp() {
         secret: ENV_VEB.SESION_SECRET,
         saveUninitialized: false,
         resave: true,
+        maxAge: ENV_VEB.SESION_TIME,
         cookie: {
             maxAge: ENV_VEB.COOKIE_TIME,
         },

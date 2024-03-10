@@ -4,6 +4,7 @@ import { userValidations } from "../utils/validation/validationSchema.mjs";
 import { User } from "../mongoose/schemas/user.mjs";
 import { hashPassword } from "../utils/security/hash.mjs";
 import getNewResData from "../utils/responseData.mjs"
+import checkAuth from "../utils/middlewares.mjs";
 
 
 const router = Router();
@@ -12,6 +13,7 @@ const router = Router();
 // Only use super admin
 router.get("/api/auth/users", 
 [ 
+    checkAuth,
     checkSchema(userValidations.filterValidetionSchema), 
     checkSchema(userValidations.valueValidetionSchema),
     checkSchema(userValidations.limitValidetionSchema)
@@ -64,6 +66,7 @@ async (req, res) => {
 // 
 router.get("/api/auth/users/:username", 
 [
+    checkAuth,
     checkSchema(userValidations.usernameValidetionSchema)
 ],
 async (req, res) => {
@@ -92,6 +95,7 @@ async (req, res) => {
 // Only use super admin
 router.post("/api/auth/users/newuser", 
 [
+    checkAuth,
     checkSchema(userValidations.usernameValidetionSchema),
     checkSchema(userValidations.passwordValidetionSchema),
     checkSchema(userValidations.titleValidetionSchema),
@@ -140,6 +144,7 @@ async (req, res) => {
 // Only use super admin
 router.patch("/api/auth/users/updateuser", 
 [
+    checkAuth,
     checkSchema(userValidations.usernameValidetionSchema),
     checkSchema(userValidations.passwordValidetionSchema),
     checkSchema(userValidations.titleValidetionSchema),

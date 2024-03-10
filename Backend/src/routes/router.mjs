@@ -10,8 +10,6 @@ router.use(userRouter);
 
 
 router.get("/", (req, res) => {
-    console.log(req.session);
-    console.log(req.session.id);
     return res.status(200).send(getNewResData(true, false, "Grocery Shop Management System WA [MERN]", 200, []));
 });
 
@@ -20,7 +18,7 @@ router.get("/api", (req, res) => {
 });
 
 router.all("*", (req, res) => {
-    return res.status(404).send(getNewResData(false, false, "Page Not Found !", 404, []));
+    return res.status(404).send(getNewResData(false, false, "Page Not Found !", 404, [{ redirect: "/api/auth" }]));
 });
 
 

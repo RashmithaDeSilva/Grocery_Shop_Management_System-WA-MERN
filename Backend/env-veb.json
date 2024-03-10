@@ -7,5 +7,6 @@
     },
     "SALT_ROUNDS": 10,
     "SESION_SECRET": "session secret for SHOWP NAME >192.168.8.139:6000<",
+    "SESION_TIME": 86400000,
     "COOKIE_TIME": 86400000
 }
