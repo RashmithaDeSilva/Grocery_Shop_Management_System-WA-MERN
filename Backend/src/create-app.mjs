@@ -1,5 +1,4 @@
 import express from "express";
-import fs from "fs";
 import session from "express-session";
 import passport from "passport";
 import router from "./routes/router.mjs";
@@ -9,18 +8,15 @@ import "./strategies/local-stratagy.mjs"
 
 
 export function createApp() {
-    const jsonData = fs.readFileSync('./env-veb.json', 'utf-8');
-    const ENV_VEB = JSON.parse(jsonData);
-
     const app = express();
     app.use(express.json());
     app.use(session({
-        secret: ENV_VEB.SESION_SECRET,
+        secret: `${ process.env.SESION_SECRET }`,
         saveUninitialized: false,
         resave: true,
-        maxAge: ENV_VEB.SESION_TIME,
+        maxAge: parseInt(process.env.SESION_TIME),
         cookie: {
-            maxAge: ENV_VEB.COOKIE_TIME,
+            maxAge: parseInt(process.env.COOKIE_TIME),
         },
         store: MongoStore.create({
             client: mongoose.connection.getClient(),
