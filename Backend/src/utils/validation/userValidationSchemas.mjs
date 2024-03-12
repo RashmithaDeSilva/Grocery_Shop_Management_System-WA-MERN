@@ -54,6 +54,7 @@ export const passwordValidetionSchema = {
 export const contactnuberValidetionSchema = {
     contactnuber: {
         isInt: {
+            value: true,
             errorMessage: {
                 value: "CONTACTNUMBER", 
                 error: "Contactnuber is not int !"
@@ -89,6 +90,13 @@ export const emailValidetionSchema = {
                 value: "EMAIL", 
                 error: "Email must be at least 10 - 50 characters !"
             }
+        },
+        isEmail: {
+            value: true,
+            errorMessage: {
+                value: "EMAIL", 
+                error: "Invalide email !"
+            }
         }
     }
 };
@@ -102,6 +110,7 @@ export const titleValidetionSchema = {
             }
         },
         isInt: {
+            value: true,
             errorMessage: {
                 value: "TITLE", 
                 error: "Title is not int !"
@@ -110,11 +119,11 @@ export const titleValidetionSchema = {
         isLength: {
             options: {
                 min: 0,
-                max: 4
+                max: 3
             },
             errorMessage: {
                 value: "TITLE", 
-                error: "Title ust be at least 0 - 4 numbers !"
+                error: "Title ust be at least 0 - 3 numbers !"
             }
         }
     }

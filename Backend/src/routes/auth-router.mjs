@@ -10,11 +10,9 @@ const router = Router();
 router.post("/api/auth", passport.authenticate("local"), async (req, res) => {
     try {
         res.status(200).send(getNewResData(true, true, "Successfully Login", 200, []));
-
     } catch(e) {
         return res.status(400).send(getNewResData(false, false, "[ERROR]", 404, { errors: e }));
     }
-
 });
 
 // Chech auth status

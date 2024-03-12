@@ -26,9 +26,6 @@ async function loadPermission() {
     // Access the DEVELOPER array
     userRollAccess = permissions;
 
-    // Use the array as needed
-    console.log("[INFO] - Permissions loaded");
-    
   } catch (error) {
     console.error('[Error] - ', error);
     throw error; // Ensure the error is propagated to the caller
@@ -43,6 +40,7 @@ const checkAuth = async (req, res, next) => {
 
   if (userRollAccess === null) {
     await loadPermission(); // Wait for the permissions to be loaded
+    console.log("[INFO] - Permissions loaded");
   }
 
   let valide = false;
@@ -52,31 +50,37 @@ const checkAuth = async (req, res, next) => {
 
   switch(req.user.title) {
     case 0: // Developer ---------------------------------------------------------------------------------
-        if(req.url.split("/")[splitLength - 1] !== req.user.username && !req.url.includes("?")) {
+        if(req.url.split("/")[splitLength - 1] !== req.user.username 
+        && req.url.split("/")[splitLength - 2] !== "users"
+        && !req.url.includes("?")) {
             valide = false
             break;
         };
 
-        for(let i=1; i<userRollAccess.ADMIN.length; i++) {
+        for(let i=1; i<userRollAccess.DEVALOPER.length; i++) {
             if(req.url.includes(userRollAccess.ADMIN[i])) valide = true;
         };
 
         break;
 
     case 1: // Super Admin -------------------------------------------------------------------------------
-        if(req.url.split("/")[splitLength - 1] !== req.user.username && !req.url.includes("?")) {
+        if(req.url.split("/")[splitLength - 1] !== req.user.username 
+        && req.url.split("/")[splitLength - 2] !== "users"
+        && !req.url.includes("?")) {
             valide = false
             break;
         };
 
-        for(let i=1; i<userRollAccess.ADMIN.length; i++) {
+        for(let i=1; i<userRollAccess.SUPER_ADMIN.length; i++) {
             if(req.url.includes(userRollAccess.ADMIN[i])) valide = true;
         };
 
         break;
 
     case 2: // Admin -------------------------------------------------------------------------------------
-        if(req.url.split("/")[splitLength - 1] !== req.user.username && !req.url.includes("?")) {
+        if(req.url.split("/")[splitLength - 1] !== req.user.username 
+        && req.url.split("/")[splitLength - 2] !== "users"
+        && !req.url.includes("?")) {
             valide = false
             break;
         };

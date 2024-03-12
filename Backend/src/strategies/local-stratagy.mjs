@@ -23,10 +23,11 @@ export default passport.use(
     new Strategy(async (username, password, done) => {
         try{
             const findUser = await User.findOne({ username });
-            if(!findUser) throw new Error('User Not Found !');
+            if(!findUser) throw new Error("User Not Found !");
+
+            if(findUser.banded) throw new Error("Banded User !");
             
-            // findUser.password !== password
-            if(!comparePassword(password, findUser.password)) throw new Error('Invalid Credentials !');
+            if(!comparePassword(password, findUser.password)) throw new Error("Invalid Credentials !");
             done(null, findUser);
 
         } catch(e) {

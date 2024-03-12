@@ -154,16 +154,19 @@ async (req, res) => {
         if(result.errors.filter((e) => e.msg.value === "TITLE").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
+        if(data.title < 0 || data.title > 3)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: "Title ust be at least 0 - 3 numbers !"}));
+
         if(result.errors.filter((e) => e.msg.value === "BANDED").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
-        if(data.contactnuber && result.errors.filter((e) => e.msg.value === "CONTACTNUMBER").length !== 0)
+        if(req.body.contactnuber !== undefined && result.errors.filter((e) => e.msg.value === "CONTACTNUMBER").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(req.body.email !== undefined && result.errors.filter((e) => e.msg.value === "EMAIL").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
-        if(data.title !== 2 || data.title !== 3) 
+        if(req.user.title === 1 && data.title >= 2 && data.title <= 3) 
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, {msg: "You can add only title type are 2(admin) and 3(user)"}));
 
         if(req.user.title === 2 && data.title !== 3) 
@@ -208,16 +211,19 @@ async (req, res) => {
         if(result.errors.filter((e) => e.msg.value === "TITLE").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
+        if(data.title < 0 || data.title > 3)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: "Title ust be at least 0 - 3 numbers !"}));
+
         if(result.errors.filter((e) => e.msg.value === "BANDED").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
-        if(data.contactnuber && result.errors.filter((e) => e.msg.value === "CONTACTNUMBER").length !== 0)
+        if(req.body.contactnuber !== undefined && result.errors.filter((e) => e.msg.value === "CONTACTNUMBER").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         if(req.body.email !== undefined && result.errors.filter((e) => e.msg.value === "EMAIL").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
-        if(data.title !== 2 || data.title !== 3) 
+        if(req.user.title === 1 && data.title >= 2 && data.title <= 3) 
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, {msg: "You can add only title type are 2(admin) and 3(user)"}));
 
         if(req.user.title === 2 && data.title !== 3) 
