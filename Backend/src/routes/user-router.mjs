@@ -10,6 +10,50 @@ import checkAuth from "../utils/middlewares.mjs";
 const router = Router();
 
 
+async function getUsers(userRoll, limit) {
+    switch(userRoll) {
+        case 0:
+            return await User.find({ title: { $ne: '0' } }, 'username title').limit(limit);
+
+        case 1:
+            return await User.find({ title: { $ne: '0' } }).select('-password').limit(limit);
+
+        case 2:
+            return await User.find({ title: { $nin: ['0', '1', '2'] } }).select('-password').limit(limit);
+
+        default:
+            return [];
+    }
+    
+}
+
+async function getUsersByFilter(userRoll, limit, filter, value) {
+    const mongoQuery = {};
+
+    if (filter === "contactnumber") {
+        mongoQuery[filter] = value;
+    } else {
+        mongoQuery[filter] = { $regex: value, $options: 'i' };
+    }
+
+    switch (userRoll) {
+        case 0:
+            return await User.find({ title: { $ne: '0' }, ...mongoQuery }).select('username title').limit(limit);
+
+        case 1:
+            return await User.find({ title: { $ne: '0' }, ...mongoQuery }).select('-password').limit(limit);
+
+        case 2:
+            mongoQuery.title = { $nin: ["0", "1", "2"] };
+            return await User.find(mongoQuery).select('-password').limit(limit);
+
+        default:
+            return [];
+    }
+}
+
+
+
 // Only use super admin
 router.get("/api/auth/users", 
 [ 
@@ -38,19 +82,11 @@ async (req, res) => {
         let newLimit = (limit === "0") ? 10 : limit;
 
         if(Object.keys(data).length === 1) {
-            const users = await User.find().select('-password').limit(newLimit);
+            const users = await getUsers(req.user.title, newLimit);
             return res.status(200).send(getNewResData(true, true, "Successful request", 200, users));
 
         } else if(Object.keys(data).length === 3) {
-            const mongoQuery = {};
-
-            if(filter === "title" || filter === "contactnumber") {
-                mongoQuery[filter] = value;
-            } else{
-                mongoQuery[filter] = { $regex: value, $options: 'i' };
-            }
-            
-            const users = await User.find(mongoQuery).select('-password').limit(newLimit);
+            const users = await getUsersByFilter(req.user.title, newLimit, filter, value);
             return res.status(200).send(getNewResData(true, true, "Successful request", 200, users));
         }
         
