@@ -163,7 +163,12 @@ async (req, res) => {
         if(req.body.email !== undefined && result.errors.filter((e) => e.msg.value === "EMAIL").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
-            
+        if(data.title !== 2 || data.title !== 3) 
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, {msg: "Uoy can add only title type are 2(admin) and 3(user)"}));
+
+        if(req.user.title === 2 && data.title !== 3) 
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, {msg: "Uoy can add only title type is 3(user)"}));
+        
         data.password = hashPassword(data.password);
         const newUser = new User(data);
         const saveUser = await newUser.save();
