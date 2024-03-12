@@ -133,7 +133,7 @@ async (req, res) => {
         const saveUser = await newUser.save();
         const userWithoutPassword = { ...saveUser._doc };
         delete userWithoutPassword.password;
-        return res.status(201).send(getNewResData(true, true, "Successfully added user", 200, { user: userWithoutPassword }));
+        return res.status(201).send(getNewResData(true, true, "Successfully added user", 201, { user: userWithoutPassword }));
     
     } catch(e) {
         return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
@@ -179,7 +179,7 @@ async (req, res) => {
         if(data.password !== undefined) data.password = hashPassword(data.password);
         await User.findByIdAndUpdate(req.body._id, data);
         const updateUser = await User.find({ _id: req.body._id }).select('-password').limit(1);
-        return res.status(204).send(getNewResData(true, true, "Successfully update user", 200, { user: updateUser[0] }));
+        return res.status(204).send(getNewResData(true, true, "Successfully update user", 204, { user: updateUser[0] }));
     
     } catch(e) {
         return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
