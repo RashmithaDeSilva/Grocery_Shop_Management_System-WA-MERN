@@ -2,7 +2,7 @@ import { Router } from "express";
 import { validationResult, matchedData, checkSchema } from "express-validator"
 import { userValidations } from "../utils/validation/validationSchema.mjs";
 import { User } from "../mongoose/schemas/user.mjs";
-import { hashPassword } from "../utils/security/hash.mjs";
+import { hashPassword, comparePassword } from "../utils/security/hash.mjs";
 import getNewResData from "../utils/responseData.mjs"
 import checkAuth from "../utils/middlewares.mjs";
 
@@ -69,6 +69,7 @@ async (req, res) => {
         const result = validationResult(req);
         const data = matchedData(req);
         const { query: { filter, value, limit }} = req;
+        console.log(req.user._id);
 
         if(filter !== undefined && filter !== null && result.errors.filter((e) => e.msg.value === "FILTER").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
@@ -100,28 +101,47 @@ async (req, res) => {
 });
 
 // 
-router.get("/api/auth/users/:username", 
-[
-    checkAuth,
-    checkSchema(userValidations.usernameValidetionSchema)
-],
-async (req, res) => {
-
+router.get("/api/auth/users/:username", [ checkAuth ], async (req, res) => {
     try {
+        return res.status(200).send(getNewResData(true, true, "Successful request", 200, { user: req.user }));
+    
+    } catch(e) {
+        return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
+    }
 
+});
+
+// 
+router.post("/api/auth/users/:username/changepassword", 
+[ 
+    checkAuth,
+    checkSchema(userValidations.passwordValidetionSchema)
+], 
+async (req, res) => {
+    try {
         const result = validationResult(req);
         const data = matchedData(req);
 
-        if(result.errors.filter((e) => e.msg.value === "USERNAME").length !== 0)
+        if(result.errors.filter((e) => e.msg.value === "OLDPASSWORD").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
-        if(data.username === undefined || data.username === null) return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
-
-        const user = await User.findOne({ username: data.username }).select('-password');
-        if(user !== null) return res.status(200).send(getNewResData(true, true, "Successful request", 200, { user: user }));
-
+        if(result.errors.filter((e) => e.msg.value === "NEWPASSWORD").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
-    
+
+        if(result.errors.filter((e) => e.msg.value === "CONFORMPASSWORD").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+        
+        if(data.new_password !== data.conform_password)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: "new password and confoem password is not equal !" }));
+
+        const user = await User.findById(req.user._id).select('password');
+        if(!comparePassword(data.old_password, user.password)) 
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: "Old password is incorrect !" }));
+        
+        const newPassword = hashPassword(data.new_password);
+        await User.findByIdAndUpdate(req.user._id, { password: newPassword });
+        return res.status(201).send(getNewResData(true, true, "Successfully update user password", 201, { user: req.user }));
+
     } catch(e) {
         return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
     }

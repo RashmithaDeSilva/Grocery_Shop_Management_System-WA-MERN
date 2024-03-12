@@ -50,61 +50,83 @@ const checkAuth = async (req, res, next) => {
 
   switch(req.user.title) {
     case 0: // Developer ---------------------------------------------------------------------------------
-        if(req.url.split("/")[splitLength - 1] !== req.user.username 
-        && req.url.split("/")[splitLength - 2] !== "users"
-        && !req.url.includes("?")) {
-            valide = false
-            break;
-        };
+      // console.log(0);
+      if(req.url.split("/")[splitLength - 1] === req.user.username 
+      && req.url.split("/")[splitLength - 2] === "users"
+      && !req.url.includes("?")) {
+          valide = true;
+          break;
+      };
 
-        for(let i=1; i<userRollAccess.DEVALOPER.length; i++) {
-            if(req.url.includes(userRollAccess.ADMIN[i])) valide = true;
-        };
-
+      if(req.url.split("/")[splitLength - 2] === req.user.username) {
+        valide = true;
         break;
+      };
+
+      for(let i=1; i<userRollAccess.DEVALOPER.length; i++) {
+        if(req.url.includes(userRollAccess.ADMIN[i])) valide = true;
+      };
+
+      break;
 
     case 1: // Super Admin -------------------------------------------------------------------------------
-        if(req.url.split("/")[splitLength - 1] !== req.user.username 
-        && req.url.split("/")[splitLength - 2] !== "users"
-        && !req.url.includes("?")) {
-            valide = false
-            break;
-        };
+      // console.log(1);
+      if(req.url.split("/")[splitLength - 1] === req.user.username 
+      && req.url.split("/")[splitLength - 2] === "users"
+      && !req.url.includes("?")) {
+          valide = true;
+          break;
+      };
 
-        for(let i=1; i<userRollAccess.SUPER_ADMIN.length; i++) {
-            if(req.url.includes(userRollAccess.ADMIN[i])) valide = true;
-        };
-
+      if(req.url.split("/")[splitLength - 2] === req.user.username) {
+        valide = true;
         break;
+      };
+
+      for(let i=1; i<userRollAccess.SUPER_ADMIN.length; i++) {
+        if(req.url.includes(userRollAccess.ADMIN[i])) valide = true;
+      };
+
+      break;
 
     case 2: // Admin -------------------------------------------------------------------------------------
-        if(req.url.split("/")[splitLength - 1] !== req.user.username 
-        && req.url.split("/")[splitLength - 2] !== "users"
-        && !req.url.includes("?")) {
-            valide = false
-            break;
-        };
+      // console.log(2);
+      if(req.url.split("/")[splitLength - 1] === req.user.username 
+      && req.url.split("/")[splitLength - 2] === "users"
+      && !req.url.includes("?")) {
+          valide = true;
+          break;
+      };
 
-        for(let i=1; i<userRollAccess.ADMIN.length; i++) {
-            if(req.url.includes(userRollAccess.ADMIN[i])) valide = true;
-        };
-
+      
+      if(req.url.split("/")[splitLength - 2] === req.user.username) {
+        valide = true;
         break;
+      };
+
+      for(let i=1; i<userRollAccess.ADMIN.length; i++) {
+        if(req.url.includes(userRollAccess.ADMIN[i])) valide = true;
+      };
+
+      break;
 
     case 3: // User --------------------------------------------------------------------------------------
-        if(req.url.split("/")[splitLength - 1] === req.user.username) {
-            valide = true
-            break;
-        };
+      // console.log(3);
+      if(req.url.split("/")[splitLength - 1] === req.user.username 
+      || req.url.split("/")[splitLength - 2] === req.user.username) {
+          valide = true;
+          break;
+      };
 
-        for(let i=1; i<userRollAccess.USER.length; i++) {
-            if(req.url.includes(userRollAccess.USER[i])) valide = true;
-        }
+      for(let i=1; i<userRollAccess.USER.length; i++) {
+        if(req.url.includes(userRollAccess.USER[i])) valide = true;
+      }
 
-        break;
+      break;
 
     default:
-        return res.status(401).send(getNewResData(false, true, "[ERROR] - Unauthorized user roll", 401, [{ redirect: "/api/auth" }]));
+      console.log("def");
+      return res.status(401).send(getNewResData(false, true, "[ERROR] - Unauthorized user roll", 401, [{ redirect: "/api/auth" }]));
   }
 
   if(!valide) return res.status(401).send(getNewResData(false, true, "[ERROR] - Unauthorized user roll", 401, [{ redirect: "/api/auth" }]));

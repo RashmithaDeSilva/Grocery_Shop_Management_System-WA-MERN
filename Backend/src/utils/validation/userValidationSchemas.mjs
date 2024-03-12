@@ -48,6 +48,75 @@ export const passwordValidetionSchema = {
                 error: "Password must be at least 5 characters !"
             }
         }
+    },
+    old_password: {
+        notEmpty: { 
+            errorMessage: {
+                value: "OLDPASSWORD", 
+                error: "Old password canot empty !"
+            }
+        },
+        isString: {
+            errorMessage: {
+                value: "OLDPASSWORD", 
+                error: "Old password is not string !"
+            }
+        },
+        isLength: {
+            options: {
+                min: 5
+            },
+            errorMessage: {
+                value: "OLDPASSWORD", 
+                error: "Old password must be at least 5 characters !"
+            }
+        }
+    },
+    new_password: {
+        notEmpty: { 
+            errorMessage: {
+                value: "NEWPASSWORD", 
+                error: "New password canot empty !"
+            }
+        },
+        isString: {
+            errorMessage: {
+                value: "NEWPASSWORD", 
+                error: "New password is not string !"
+            }
+        },
+        isLength: {
+            options: {
+                min: 5
+            },
+            errorMessage: {
+                value: "NEWPASSWORD", 
+                error: "New password must be at least 5 characters !"
+            }
+        }
+    },
+    conform_password: {
+        notEmpty: { 
+            errorMessage: {
+                value: "CONFORMPASSWORD", 
+                error: "Conform password canot empty !"
+            }
+        },
+        isString: {
+            errorMessage: {
+                value: "CONFORMPASSWORD", 
+                error: "Conform password is not string !"
+            }
+        },
+        isLength: {
+            options: {
+                min: 5
+            },
+            errorMessage: {
+                value: "CONFORMPASSWORD", 
+                error: "Conform password must be at least 5 characters !"
+            }
+        }
     }
 };
 
