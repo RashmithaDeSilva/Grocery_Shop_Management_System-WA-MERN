@@ -12,6 +12,7 @@ passport.deserializeUser( async (id, done) => {
     try{
         const findUser = await User.findById(id).select("-password");
         if(!findUser) throw new Error('User Not Found !');
+        if(findUser.banded) throw new Error("Banded User !");
         done(null, findUser);
 
     } catch(e) {
@@ -24,9 +25,7 @@ export default passport.use(
         try{
             const findUser = await User.findOne({ username });
             if(!findUser) throw new Error("User Not Found !");
-
             if(findUser.banded) throw new Error("Banded User !");
-            
             if(!comparePassword(password, findUser.password)) throw new Error("Invalid Credentials !");
             done(null, findUser);
 
