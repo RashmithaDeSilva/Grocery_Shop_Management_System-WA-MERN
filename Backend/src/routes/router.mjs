@@ -1,12 +1,14 @@
 import { Router } from "express";
+import getNewResData from "../utils/responseData.mjs"
 import authRouter from "./auth-router.mjs";
 import userRouter from "./user-router.mjs";
-import getNewResData from "../utils/responseData.mjs"
+import productAndServiceRouter from "./productAndService-router.mjs";
 
 
 const router = Router();
 router.use(authRouter);
 router.use(userRouter);
+router.use(productAndServiceRouter);
 
 
 router.get("/", (req, res) => {
