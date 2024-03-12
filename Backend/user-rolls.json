@@ -1,0 +1,46 @@
+{
+    "DEVELOPER": [
+        "/api/auth",
+        "/api/auth/status",
+        "/api/auth/logout",
+
+        "/api/auth/users",
+        "/api/auth/users/:username/changepassword"
+    ],
+
+
+    "SUPERE_ADMIN": [
+        "/api/auth",
+        "/api/auth/status",
+        "/api/auth/logout",
+
+        "/api/auth/users",
+        "/api/auth/users/:username",
+        "/api/auth/users/newuser",
+        "/api/auth/users/updateuser",
+        "/api/auth/users/:username/changepassword"
+    ],
+
+
+    "ADMIN": [
+        "/api/auth",
+        "/api/auth/status",
+        "/api/auth/logout",
+
+        "/api/auth/users",
+        "/api/auth/users/:username",
+        "/api/auth/users/newuser",
+        "/api/auth/users/updateuser",
+        "/api/auth/users/:username/changepassword"
+    ],
+
+
+    "USER": [
+        "/api/auth",
+        "/api/auth/status",
+        "/api/auth/logout",
+
+        "/api/auth/users/:username",
+        "/api/auth/users/:username/changepassword"
+    ]
+}
