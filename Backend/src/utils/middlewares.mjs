@@ -63,8 +63,8 @@ const checkAuth = async (req, res, next) => {
         break;
       };
 
-      for(let i=1; i<userRollAccess.DEVALOPER.length; i++) {
-        if(req.url.includes(userRollAccess.ADMIN[i])) valide = true;
+      for(let i=1; i<userRollAccess.DEVELOPER.length; i++) {
+        if(req.url.includes(userRollAccess.DEVELOPER[i])) valide = true;
       };
 
       break;
@@ -84,7 +84,7 @@ const checkAuth = async (req, res, next) => {
       };
 
       for(let i=1; i<userRollAccess.SUPER_ADMIN.length; i++) {
-        if(req.url.includes(userRollAccess.ADMIN[i])) valide = true;
+        if(req.url.includes(userRollAccess.SUPER_ADMIN[i])) valide = true;
       };
 
       break;

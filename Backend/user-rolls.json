@@ -9,7 +9,7 @@
     ],
 
 
-    "SUPERE_ADMIN": [
+    "SUPER_ADMIN": [
         "/api/auth",
         "/api/auth/status",
         "/api/auth/logout",
@@ -19,7 +19,7 @@
         "/api/auth/users/newuser",
         "/api/auth/users/updateuser",
         "/api/auth/users/:username/changepassword",
-        
+
         "/api/auth/productandservices"
     ],
 
