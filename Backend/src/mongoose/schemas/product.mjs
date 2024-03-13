@@ -1,13 +1,17 @@
 import mongoose from "mongoose";
 
 
-const ProductSchema = new mongoose.Schema({
+const ProductOrServiceSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
-    product_name: {
+    product_or_service_name: {
         type: mongoose.Schema.Types.String,
+        required: true
+    },
+    category: {
+        type: mongoose.Schema.Types.Number,
         required: true
     },
     set_or_reset_date: {
@@ -25,7 +29,7 @@ const ProductSchema = new mongoose.Schema({
 });
 
 // Pre-save middleware to update date and time fields
-ProductSchema.pre('save', function(next) {
+ProductOrServiceSchema.pre('save', function(next) {
     const currentDate = new Date();
 
     // Format date as DD-MM-YYYY
@@ -42,4 +46,4 @@ ProductSchema.pre('save', function(next) {
 });
 
 
-export const Product = mongoose.model('Product', ProductSchema);
+export const ProductOrService = mongoose.model("ProductOrService", ProductOrServiceSchema);

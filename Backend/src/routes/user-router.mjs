@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { validationResult, matchedData, checkSchema } from "express-validator"
+import getNewResData from "../utils/responseData.mjs";
+import checkAuth from "../utils/middlewares.mjs";
+import { validationResult, matchedData, checkSchema } from "express-validator";
 import { userValidations } from "../utils/validation/validationSchema.mjs";
 import { User } from "../mongoose/schemas/user.mjs";
 import { hashPassword, comparePassword } from "../utils/security/hash.mjs";
-import getNewResData from "../utils/responseData.mjs"
-import checkAuth from "../utils/middlewares.mjs";
 
 
 const router = Router();
@@ -53,7 +53,6 @@ async function getUsersByFilter(userRoll, limit, filter, value) {
 }
 
 
-
 // Only use super admin
 router.get("/api/auth/users", 
 [ 
@@ -69,7 +68,6 @@ async (req, res) => {
         const result = validationResult(req);
         const data = matchedData(req);
         const { query: { filter, value, limit }} = req;
-        console.log(req.user._id);
 
         if(filter !== undefined && filter !== null && result.errors.filter((e) => e.msg.value === "FILTER").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));

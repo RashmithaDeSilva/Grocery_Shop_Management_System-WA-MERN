@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import getNewResData from "../utils/responseData.mjs"
+import getNewResData from "../utils/responseData.mjs";
 
 
 const router = Router();

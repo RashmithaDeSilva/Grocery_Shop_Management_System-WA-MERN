@@ -18,7 +18,9 @@
         "/api/auth/users/:username",
         "/api/auth/users/newuser",
         "/api/auth/users/updateuser",
-        "/api/auth/users/:username/changepassword"
+        "/api/auth/users/:username/changepassword",
+        
+        "/api/auth/productandservices"
     ],
 
 
@@ -31,7 +33,9 @@
         "/api/auth/users/:username",
         "/api/auth/users/newuser",
         "/api/auth/users/updateuser",
-        "/api/auth/users/:username/changepassword"
+        "/api/auth/users/:username/changepassword",
+
+        "/api/auth/productandservices"
     ],
 
 
