@@ -1,5 +1,5 @@
 import { Router } from "express";
-import getNewResData from "../utils/responseData.mjs"
+import getNewResData from "../utils/responseData.mjs";
 import authRouter from "./auth-router.mjs";
 import userRouter from "./user-router.mjs";
 import productAndServiceRouter from "./productAndService-router.mjs";

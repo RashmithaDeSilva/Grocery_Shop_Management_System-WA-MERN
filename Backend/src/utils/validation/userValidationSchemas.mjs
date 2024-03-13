@@ -9,7 +9,7 @@ export const usernameValidetionSchema = {
         isString: {
             errorMessage: {
                 value: "USERNAME", 
-                error: "User name is not string !"
+                error: "User name must be string !"
             }
         },
         isLength: {
@@ -36,7 +36,7 @@ export const passwordValidetionSchema = {
         isString: {
             errorMessage: {
                 value: "PASSWORD", 
-                error: "Password is not string !"
+                error: "Password must be string !"
             }
         },
         isLength: {
@@ -59,7 +59,7 @@ export const passwordValidetionSchema = {
         isString: {
             errorMessage: {
                 value: "OLDPASSWORD", 
-                error: "Old password is not string !"
+                error: "Old password must be string !"
             }
         },
         isLength: {
@@ -82,7 +82,7 @@ export const passwordValidetionSchema = {
         isString: {
             errorMessage: {
                 value: "NEWPASSWORD", 
-                error: "New password is not string !"
+                error: "New password must be string !"
             }
         },
         isLength: {
@@ -105,7 +105,7 @@ export const passwordValidetionSchema = {
         isString: {
             errorMessage: {
                 value: "CONFORMPASSWORD", 
-                error: "Conform password is not string !"
+                error: "Conform password must be string !"
             }
         },
         isLength: {
@@ -126,7 +126,7 @@ export const contactnuberValidetionSchema = {
             value: true,
             errorMessage: {
                 value: "CONTACTNUMBER", 
-                error: "Contactnuber is not int !"
+                error: "Contactnuber must be int !"
             }
         },
         isLength: {
@@ -147,7 +147,7 @@ export const emailValidetionSchema = {
         isString: {
             errorMessage: {
                 value: "EMAIL", 
-                error: "Email is not string !"
+                error: "Email must be string !"
             }
         },
         isLength: {
@@ -182,7 +182,7 @@ export const titleValidetionSchema = {
             value: true,
             errorMessage: {
                 value: "TITLE", 
-                error: "Title is not int !"
+                error: "Title must be int !"
             }
         },
         isLength: {
@@ -209,7 +209,7 @@ export const bandedValidetionSchema = {
         isBoolean: {
             errorMessage: {
                 value: "BANDED", 
-                error: "Banded is not boolean !"
+                error: "Banded must be boolean !"
             }
         }
     }
@@ -220,7 +220,7 @@ export const filterValidetionSchema = {
         isString: {
             errorMessage: {
                 value: "FILTER", 
-                error: "Filter is not string !"
+                error: "Filter must be string !"
             }
         },
         notEmpty: { 
@@ -248,7 +248,7 @@ export const limitValidetionSchema = {
         isInt: {
             errorMessage: {
                 value: "LIMITE", 
-                error: "Limit is not int !"
+                error: "Limit must be int !"
             }
         },
         notEmpty: { 

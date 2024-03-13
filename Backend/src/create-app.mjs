@@ -4,7 +4,7 @@ import passport from "passport";
 import router from "./routes/router.mjs";
 import mongoose from "mongoose";
 import MongoStore from "connect-mongo";
-import "./strategies/local-stratagy.mjs"
+import "./strategies/local-stratagy.mjs";
 
 
 export function createApp() {
