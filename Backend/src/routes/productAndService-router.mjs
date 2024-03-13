@@ -118,5 +118,47 @@ async (req, res) => {
 
 });
 
+// Super admin and Admin only
+router.patch("/api/auth/productandservices/updateproductorservice", 
+[
+    checkAuth,
+    checkSchema(productAndServiceValidations.productAndserviceNameValidetionSchema),
+    checkSchema(productAndServiceValidations.categoryValidetionSchema),
+    checkSchema(productAndServiceValidations.stopSellingValidetionSchema)
+], 
+async (req, res) => {
+
+    try {
+        const result = validationResult(req);
+        const data = matchedData(req);
+
+        if(req.body._id === undefined)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: "ID must required !"}));
+
+        if(data.product_or_service_name !== undefined && result.errors.filter((e) => e.msg.value === "PRODUCTORSERVICENAME").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+
+        if(data.category !== undefined && result.errors.filter((e) => e.msg.value === "CATEGORY").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+
+        if(data.stop_selling !== undefined && result.errors.filter((e) => e.msg.value === "STOPSELLING").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+
+        if(data.category !== undefined && parseInt(data.category) < 0 || parseInt(data.category) > 1)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: "Category must be at least 0 - 1 numbers !"}));
+
+        data["user_id"] = req.user._id;
+        data["set_or_reset_date"] = getDate();
+        data["set_or_reset_time"] = getTime();
+        await ProductOrService.findByIdAndUpdate(req.body._id, data);
+        const updateProductOrService = await ProductOrService.findById(req.body._id);
+        return res.status(204).send(getNewResData(true, true, `Successfully added ${data.category === 0 ? "product" : "service"}`, 204, { item: updateProductOrService }));
+    
+    } catch(e) {
+        return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
+    }
+
+});
+
 
 export default router;
