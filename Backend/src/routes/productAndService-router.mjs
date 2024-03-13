@@ -2,7 +2,7 @@ import { Router } from "express";
 import getNewResData from "../utils/responseData.mjs";
 import checkAuth from "../utils/middlewares.mjs";
 import { validationResult, matchedData, checkSchema } from "express-validator";
-import { ProductOrService } from "../mongoose/schemas/product.mjs";
+import { ProductOrService } from "../mongoose/schemas/productOrService.mjs";
 import { productAndServiceValidations } from "../utils/validation/validationSchema.mjs";
 
 
