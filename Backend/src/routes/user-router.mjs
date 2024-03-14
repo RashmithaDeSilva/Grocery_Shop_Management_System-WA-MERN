@@ -30,20 +30,35 @@ async function getUsers(userRoll, limit) {
 async function getUsersByFilter(userRoll, limit, filter, value) {
     const mongoQuery = {};
 
-    if (filter === "contactnumber") {
-        mongoQuery[filter] = value;
+    if(filter.toLowerCase().includes("password")) return { error: "A prohibited act !" };
+
+    if(filter.toLowerCase().includes("banded")) {
+        mongoQuery[filter] = value.toLowerCase().includes("false") ? false : value.toLowerCase().includes("true") ? true : null;
+        if(mongoQuery.banded === null) return { error: "Incorrect value !" };
+
+    } else if(filter.toLowerCase().includes("contactnuber") || filter.toLowerCase().includes("title")) {
+        mongoQuery[filter] = Number(value);
+        
+    } else if(filter.toLowerCase().includes("id")) {
+        mongoQuery["_id"] = value;
+
     } else {
         mongoQuery[filter] = { $regex: value, $options: 'i' };
     }
 
     switch (userRoll) {
         case 0:
+            if(filter.toLowerCase().includes("title") && Number(value) < 1 || 
+            filter.toLowerCase().includes("banded") || filter.toLowerCase().includes("contactnuber")) 
+            return { error: "You are not authorisede !" };
             return await User.find({ title: { $ne: '0' }, ...mongoQuery }).select('username title').limit(limit);
 
         case 1:
+            if(filter.toLowerCase().includes("title") && Number(value) < 1) return { error: "Incorrect user title !" };
             return await User.find({ title: { $ne: '0' }, ...mongoQuery }).select('-password').limit(limit);
 
         case 2:
+            if(filter.toLowerCase().includes("title")) return { error: "You are not authorisedy !" };
             mongoQuery.title = { $nin: ["0", "1", "2"] };
             return await User.find(mongoQuery).select('-password').limit(limit);
 
@@ -62,7 +77,6 @@ router.get("/api/auth/users",
     checkSchema(userValidations.limitValidetionSchema)
 ], 
 async (req, res) => {
-
     try {
 
         const result = validationResult(req);
@@ -86,16 +100,15 @@ async (req, res) => {
 
         } else if(Object.keys(data).length === 3) {
             const users = await getUsersByFilter(req.user.title, newLimit, filter, value);
+            if(users.length === undefined || users.length === 0) return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, users));
             return res.status(200).send(getNewResData(true, true, "Successful request", 200, users));
         }
-        
         
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
     
     } catch(e) {
         return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
     }
-
 });
 
 // 
@@ -106,7 +119,6 @@ router.get("/api/auth/users/:username", [ checkAuth ], async (req, res) => {
     } catch(e) {
         return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
     }
-
 });
 
 // 
@@ -143,7 +155,6 @@ async (req, res) => {
     } catch(e) {
         return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
     }
-
 });
 
 // Only use super admin
@@ -158,7 +169,6 @@ router.post("/api/auth/users/newuser",
     checkSchema(userValidations.emailValidetionSchema)
 ], 
 async (req, res) => {
-
     try {
         const result = validationResult(req);
         const data = matchedData(req);
@@ -200,7 +210,6 @@ async (req, res) => {
     } catch(e) {
         return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
     }
-
 });
 
 // Only use super admin
@@ -215,7 +224,6 @@ router.patch("/api/auth/users/updateuser",
     checkSchema(userValidations.emailValidetionSchema)
 ], 
 async (req, res) => {
-
     try {
         const result = validationResult(req);
         const data = matchedData(req);
@@ -255,7 +263,6 @@ async (req, res) => {
     } catch(e) {
         return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
     }
-
 });
 
 
