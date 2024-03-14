@@ -87,7 +87,6 @@ router.post("/api/auth/productandservices/newproductorservice",
     checkSchema(productAndServiceValidations.stopSellingValidetionSchema)
 ], 
 async (req, res) => {
-
     try {
         const result = validationResult(req);
         const data = matchedData(req);
@@ -115,7 +114,6 @@ async (req, res) => {
         console.log(e);
         return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
     }
-
 });
 
 // Super admin and Admin only
@@ -127,7 +125,6 @@ router.patch("/api/auth/productandservices/updateproductorservice",
     checkSchema(productAndServiceValidations.stopSellingValidetionSchema)
 ], 
 async (req, res) => {
-
     try {
         const result = validationResult(req);
         const data = matchedData(req);
@@ -157,7 +154,6 @@ async (req, res) => {
     } catch(e) {
         return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
     }
-
 });
 
 
