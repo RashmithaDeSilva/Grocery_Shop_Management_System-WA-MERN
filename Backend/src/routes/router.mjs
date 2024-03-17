@@ -3,12 +3,14 @@ import getNewResData from "../utils/responseData.mjs";
 import authRouter from "./auth-router.mjs";
 import userRouter from "./user-router.mjs";
 import productAndServiceRouter from "./productAndService-router.mjs";
+import stockRouter from "./stock-router.mjs";
 
 
 const router = Router();
 router.use(authRouter);
 router.use(userRouter);
 router.use(productAndServiceRouter);
+router.use(stockRouter);
 
 
 router.get("/", (req, res) => {

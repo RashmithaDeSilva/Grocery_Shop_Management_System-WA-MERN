@@ -20,7 +20,9 @@
         "/api/auth/users/updateuser",
         "/api/auth/users/:username/changepassword",
 
-        "/api/auth/productandservices"
+        "/api/auth/productandservices",
+        
+        "/api/auth/stock"
     ],
 
 
@@ -35,7 +37,9 @@
         "/api/auth/users/updateuser",
         "/api/auth/users/:username/changepassword",
 
-        "/api/auth/productandservices"
+        "/api/auth/productandservices",
+
+        "/api/auth/stock"
     ],
 
 
