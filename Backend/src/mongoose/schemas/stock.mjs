@@ -13,7 +13,7 @@ const StockSchema = new mongoose.Schema({
     quantity: {
         type: mongoose.Schema.Types.Number
     },
-    refill_uantity: {
+    refill_quantity: {
         type: mongoose.Schema.Types.Number
     },
     price: {

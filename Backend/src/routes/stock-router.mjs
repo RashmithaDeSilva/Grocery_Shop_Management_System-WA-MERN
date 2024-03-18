@@ -2,7 +2,7 @@ import { Router } from "express";
 import getNewResData from "../utils/responseData.mjs";
 import checkAuth from "../utils/middlewares.mjs";
 import { validationResult, matchedData, checkSchema } from "express-validator";
-import { productAndServiceValidations } from "../utils/validation/validationSchema.mjs";
+import { stockValidations } from "../utils/validation/validationSchema.mjs";
 import { Stock } from "../mongoose/schemas/stock.mjs";
 
 
@@ -10,18 +10,38 @@ const router = Router();
 const currentDate = new Date();
 
 
-// async function getProductAndServic(limit) {
-//     return await ProductOrService.find().limit(limit);
-// }
+async function getStocks(limit) {
+    return await Stock.find().limit(limit);
+}
 
-// async function getProductAndServicByFilter(limit, filter, value) {
-//     const mongoQuery = {};
+async function getStocksByFilter(limit, filter, value) {
+    const mongoQuery = {};
 
-//     mongoQuery[filter] = (filter === "category" && value === "products") ? 0 
-//     : (filter === "category" && value === "services") ? 1 : value;
+    switch(filter) {
+        case "itemId":
+            mongoQuery["product_or_service_id"] = value;
+            break;
+        
+        case "qty":
+            break;
+        
+        case "refillQty":
+            break;
 
-//     return await ProductOrService.find({ ...mongoQuery }).limit(limit);
-// }
+        case "price":
+            break;
+
+        case "qty":
+            break;
+    }
+
+    if(filter === "quantity" || filter === "refillQuantity" || filter === "refillQuantity")
+
+    mongoQuery[filter] = (filter === "category" && value === "products") ? 0 
+    : (filter === "category" && value === "services") ? 1 : value;
+
+    return await ProductOrService.find({ ...mongoQuery }).limit(limit);
+}
 
 function getDate() {
     // Format date as DD-MM-YYYY
@@ -40,38 +60,38 @@ function getTime() {
 router.get("/api/auth/stock",
 [
     checkAuth,
-    // checkSchema(productAndServiceValidations.filterValidetionSchema), 
-    // checkSchema(productAndServiceValidations.valueValidetionSchema),
-    // checkSchema(productAndServiceValidations.limitValidetionSchema)
+    checkSchema(stockValidations.filterValidetionSchema), 
+    checkSchema(stockValidations.valueValidetionSchema),
+    checkSchema(stockValidations.limitValidetionSchema)
 ], 
 async (req, res) => {
     try {
 
-        // const result = validationResult(req);
-        // const data = matchedData(req);
-        // const { query: { filter, value, limit }} = req;
+        const result = validationResult(req);
+        const data = matchedData(req);
+        const { query: { filter, value, limit }} = req;
 
-        // if(filter !== undefined && filter !== null && result.errors.filter((e) => e.msg.value === "FILTER").length !== 0)
-        // return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+        if(filter !== undefined && filter !== null && result.errors.filter((e) => e.msg.value === "FILTER").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
         
-        // if(value !== undefined && value !== null && result.errors.filter((e) => e.msg.value === "VALUE").length !== 0)
-        // return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+        if(value !== undefined && value !== null && result.errors.filter((e) => e.msg.value === "VALUE").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
-        // if(limit === undefined && result.errors.filter((e) => e.msg.value === "LIMITE").length !== 0)
-        // return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+        if(limit === undefined && result.errors.filter((e) => e.msg.value === "LIMITE").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
  
-        // let newLimit = (limit === "0") ? 10 : limit;
+        let newLimit = (limit === "0") ? 10 : limit;
 
-        // if(Object.keys(data).length === 1) {
-        //     const productAndService = await getProductAndServic(newLimit);
-        //     return res.status(200).send(getNewResData(true, true, "Successful request", 200, productAndService));
+        if(Object.keys(data).length === 1) {
+            const stocks = await getStocks(newLimit);
+            return res.status(200).send(getNewResData(true, true, "Successful request", 200, stocks));
 
-        // } else if(Object.keys(data).length === 3) {
-        //     const productAndService = await getProductAndServicByFilter(newLimit, filter, value);
-        //     return res.status(200).send(getNewResData(true, true, "Successful request", 200, productAndService));
-        // }
+        } else if(Object.keys(data).length === 3) {
+            const productAndService = await getStocksByFilter(newLimit, filter, value);
+            return res.status(200).send(getNewResData(true, true, "Successful request", 200, productAndService));
+        }
         
-        // return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
         return res.status(200).send("Stock !");
     
