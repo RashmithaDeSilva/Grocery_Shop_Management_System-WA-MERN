@@ -14,7 +14,8 @@ router.use(stockRouter);
 
 
 router.get("/", (req, res) => {
-    return res.status(200).send(getNewResData(true, false, "Grocery Shop Management System WA [MERN]", 200, []));
+    return res.status(200).send(getNewResData(true, false, 
+        `Grocery Shop Management System WA [MERN] - ${ process.env.SHOP_NAME }`, 200, []));
 });
 
 router.get("/api", (req, res) => {

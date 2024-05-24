@@ -49,3 +49,7 @@ networks:
       driver: default
       config:
         - subnet: 172.18.0.0/16
+
+volumes:
+  backend_data:
+  frontend_data:

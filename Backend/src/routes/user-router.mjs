@@ -121,7 +121,7 @@ router.get("/api/auth/users/:username", [ checkAuth ], async (req, res) => {
     }
 });
 
-// 
+// Change password
 router.post("/api/auth/users/:username/changepassword", 
 [ 
     checkAuth,
@@ -182,8 +182,8 @@ async (req, res) => {
         if(result.errors.filter((e) => e.msg.value === "TITLE").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
-        if(data.title < 0 || data.title > 3)
-        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: "Title ust be at least 0 - 3 numbers !"}));
+        if(data.title === 1 || data.title === 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: "Title must be 2(admin) or 3(user) numbers!, Other titles cannot be added!"}));
 
         if(result.errors.filter((e) => e.msg.value === "BANDED").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
@@ -193,13 +193,16 @@ async (req, res) => {
 
         if(req.body.email !== undefined && result.errors.filter((e) => e.msg.value === "EMAIL").length !== 0)
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
-
-        if(req.user.title === 1 && data.title >= 2 && data.title <= 3) 
+    
+        if(req.user.title === 1 && (data.title < 2 || data.title > 3)) 
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, {msg: "You can add only title type are 2(admin) and 3(user)"}));
 
         if(req.user.title === 2 && data.title !== 3) 
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, {msg: "You can add only title type is 3(user)"}));
         
+        if(req.user.title < 1 || req.user.title > 2) 
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, {msg: "You are not authorized for this request!"}));
+
         data.password = hashPassword(data.password);
         const newUser = new User(data);
         const saveUser = await newUser.save();
