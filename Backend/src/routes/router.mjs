@@ -22,6 +22,10 @@ router.get("/api", (req, res) => {
     return res.redirect("/");
 });
 
+router.get("/api/auth", (req, res) => {
+    return res.redirect("/api/auth/status");
+});
+
 router.all("*", (req, res) => {
     return res.status(404).send(getNewResData(false, false, "Page Not Found !", 404, [{ redirect: "/api/auth" }]));
 });
