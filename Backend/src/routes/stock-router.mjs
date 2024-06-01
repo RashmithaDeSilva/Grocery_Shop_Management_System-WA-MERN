@@ -23,24 +23,39 @@ async function getStocksByFilter(limit, filter, value) {
             break;
         
         case "qty":
+            mongoQuery["quantity"] = value;
             break;
         
-        case "refillQty":
+        case "refQty":
+            mongoQuery["refill_quantity"] = value;
             break;
 
         case "price":
+            mongoQuery["price"] = value;
             break;
 
-        case "qty":
+        case "sellPrice":
+            mongoQuery["selling_price"] = value;
+            break;
+
+        case "sellPrice":
+            mongoQuery["selling_price"] = value;
+            break;
+
+        case "stopSell":
+            mongoQuery["stop_selling"] = value;
+            break;
+
+        case "sdate":
+            mongoQuery["set_or_reset_date"] = value;
+            break;
+
+        case "time":
+            mongoQuery["set_or_reset_time"] = value;
             break;
     }
 
-    if(filter === "quantity" || filter === "refillQuantity" || filter === "refillQuantity")
-
-    mongoQuery[filter] = (filter === "category" && value === "products") ? 0 
-    : (filter === "category" && value === "services") ? 1 : value;
-
-    return await ProductOrService.find({ ...mongoQuery }).limit(limit);
+    return await Stock.find({ ...mongoQuery }).limit(limit);
 }
 
 function getDate() {
@@ -92,8 +107,6 @@ async (req, res) => {
         }
         
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
-
-        return res.status(200).send("Stock !");
     
     } catch(e) {
         return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
