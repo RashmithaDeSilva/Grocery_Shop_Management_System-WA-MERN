@@ -58,6 +58,25 @@ async function getStocksByFilter(limit, filter, value) {
     return await Stock.find({ ...mongoQuery }).limit(limit);
 }
 
+async function getStocksByValue(limit, searchRegex) {
+    return await Stock.find({
+        $or: [
+            { user_id: searchRegex },
+            { product_or_service_id: searchRegex },
+            { quantity: searchRegex },
+            { refill_quantity: searchRegex },
+            { price: searchRegex },
+            { selling_price: searchRegex },
+            { stop_selling: searchRegex },
+            { set_or_reset_date: searchRegex },
+            { set_or_reset_time: searchRegex },
+        ]
+    })
+    .populate('user_id')
+    .populate('product_or_service_id')
+    .limit(limit);
+}
+
 function getDate() {
     // Format date as DD-MM-YYYY
     const formattedDate = `${currentDate.getDate().toString().padStart(2, '0')}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getFullYear()}`;
@@ -96,13 +115,18 @@ async (req, res) => {
         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
  
         let newLimit = (limit === "0") ? 10 : limit;
+        let searchRegex = new RegExp(value, 'i'); // 'i' for case-insensitive
 
         if(Object.keys(data).length === 1) {
             const stocks = await getStocks(newLimit);
             return res.status(200).send(getNewResData(true, true, "Successful request", 200, stocks));
 
-        } else if(Object.keys(data).length === 3) {
-            const productAndService = await getStocksByFilter(newLimit, filter, value);
+        } else if(Object.keys(data).length === 2) {
+            const productAndService = await getStocksByValue(newLimit, searchRegex);
+            return res.status(200).send(getNewResData(true, true, "Successful request", 200, productAndService));
+
+        } else if (Object.keys(data).length === 3) {
+            const productAndService = await getStocksByFilter(newLimit, filter, searchRegex);
             return res.status(200).send(getNewResData(true, true, "Successful request", 200, productAndService));
         }
         
