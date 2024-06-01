@@ -22,7 +22,8 @@
 
         "/api/auth/productandservices",
         
-        "/api/auth/stock"
+        "/api/auth/stock",
+        "/api/auth/stock/newstock"
     ],
 
 
@@ -39,7 +40,8 @@
 
         "/api/auth/productandservices",
 
-        "/api/auth/stock"
+        "/api/auth/stock",
+        "/api/auth/stock/newstock"
     ],
 
 

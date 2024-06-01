@@ -1,4 +1,89 @@
-export const stopSellingValidetionSchema = {
+export const productAndserviceNameValidetionSchema = {
+    product_or_service_name: {
+        notEmpty: { 
+            errorMessage: {
+                value: "PRODUCTORSERVICENAME", 
+                error: "product or service name canot empty !"
+            }
+        },
+        isString: {
+            errorMessage: {
+                value: "PRODUCTORSERVICENAME", 
+                error: "product or service name must be string !"
+            }
+        }
+    }
+};
+
+export const quantityValidationSchema = {
+    quantity: {
+        isInt: {
+            errorMessage: {
+                value: "QUANTITY", 
+                error: "Quantity must be int !"
+            }
+        },
+        notEmpty: { 
+            errorMessage: {
+                value: "QUANTITY", 
+                error: "Quantity canot empty !"
+            }
+        }
+    }
+};
+
+export const refillQuantityValidationSchema = {
+    refill_quantity: {
+        isInt: {
+            errorMessage: {
+                value: "REFILLQUANTITY", 
+                error: "REFILL Quantity must be int !"
+            }
+        },
+        notEmpty: { 
+            errorMessage: {
+                value: "REFILLQUANTITY", 
+                error: "REFILL Quantity canot empty !"
+            }
+        }
+    }
+};
+
+export const priceValidationSchema = {
+    price: {
+        isFloat: {
+            errorMessage: {
+                value: "PRICE", 
+                error: "Price must be a float !"
+            }
+        },
+        notEmpty: { 
+            errorMessage: {
+                value: "PRICE", 
+                error: "Price cannot be empty !"
+            }
+        }
+    }
+};
+
+export const sellingPriceValidationSchema = {
+    selling_price: {
+        isFloat: {
+            errorMessage: {
+                value: "SELLINGPRICE", 
+                error: "Selling Price must be float !"
+            }
+        },
+        notEmpty: { 
+            errorMessage: {
+                value: "SELLINGPRICE", 
+                error: "Selling Price canot empty !"
+            }
+        }
+    }
+};
+
+export const stopSellingValidationSchema = {
     stop_selling: {
         notEmpty: { 
             errorMessage: {
@@ -15,7 +100,7 @@ export const stopSellingValidetionSchema = {
     }
 };
 
-export const filterValidetionSchema = {
+export const filterValidationSchema = {
     filter: {
         isString: {
             errorMessage: {
@@ -32,7 +117,7 @@ export const filterValidetionSchema = {
     }
 }
 
-export const valueValidetionSchema = {
+export const valueValidationSchema = {
     value: {
         notEmpty: { 
             errorMessage: {
@@ -43,7 +128,7 @@ export const valueValidetionSchema = {
     }
 }
 
-export const limitValidetionSchema = {
+export const limitValidationSchema = {
     limit: {
         isInt: {
             errorMessage: {

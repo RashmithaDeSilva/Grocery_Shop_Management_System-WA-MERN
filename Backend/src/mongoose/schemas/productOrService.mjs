@@ -8,7 +8,8 @@ const ProductOrServiceSchema = new mongoose.Schema({
     },
     product_or_service_name: {
         type: mongoose.Schema.Types.String,
-        required: true
+        required: true,
+        unique: true
     },
     category: {
         type: mongoose.Schema.Types.Number,

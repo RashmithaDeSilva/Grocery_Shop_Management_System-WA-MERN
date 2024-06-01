@@ -4,6 +4,7 @@ import checkAuth from "../utils/middlewares.mjs";
 import { validationResult, matchedData, checkSchema } from "express-validator";
 import { stockValidations } from "../utils/validation/validationSchema.mjs";
 import { Stock } from "../mongoose/schemas/stock.mjs";
+import { ProductOrService } from "../mongoose/schemas/productOrService.mjs";
 
 
 const router = Router();
@@ -38,15 +39,15 @@ async function getStocksByFilter(limit, filter, value) {
             mongoQuery["selling_price"] = value;
             break;
 
-        case "sellPrice":
-            mongoQuery["selling_price"] = value;
+        case "stopSell":
+            mongoQuery["stop_selling"] = value;
             break;
 
         case "stopSell":
             mongoQuery["stop_selling"] = value;
             break;
 
-        case "sdate":
+        case "date":
             mongoQuery["set_or_reset_date"] = value;
             break;
 
@@ -94,9 +95,9 @@ function getTime() {
 router.get("/api/auth/stock",
 [
     checkAuth,
-    checkSchema(stockValidations.filterValidetionSchema), 
-    checkSchema(stockValidations.valueValidetionSchema),
-    checkSchema(stockValidations.limitValidetionSchema)
+    checkSchema(stockValidations.filterValidationSchema), 
+    checkSchema(stockValidations.valueValidationSchema),
+    checkSchema(stockValidations.limitValidationSchema)
 ], 
 async (req, res) => {
     try {
@@ -138,42 +139,57 @@ async (req, res) => {
 })
 
 // // Super admin and Admin only
-// router.post("/api/auth/productandservices/newproductorservice", 
-// [
-//     checkAuth,
-//     checkSchema(productAndServiceValidations.productAndserviceNameValidetionSchema),
-//     checkSchema(productAndServiceValidations.categoryValidetionSchema),
-//     checkSchema(productAndServiceValidations.stopSellingValidetionSchema)
-// ], 
-// async (req, res) => {
-//     try {
-//         const result = validationResult(req);
-//         const data = matchedData(req);
+router.post("/api/auth/stock/newstock", 
+[
+    checkAuth,
+    checkSchema(stockValidations.productAndserviceNameValidetionSchema),
+    checkSchema(stockValidations.quantityValidationSchema), 
+    checkSchema(stockValidations.refillQuantityValidationSchema),
+    checkSchema(stockValidations.priceValidationSchema),
+    checkSchema(stockValidations.sellingPriceValidationSchema),
+    checkSchema(stockValidations.stopSellingValidationSchema)
+], 
+async (req, res) => {
+    try {
+        const result = validationResult(req);
+        const data = matchedData(req);
 
-//         if(result.errors.filter((e) => e.msg.value === "PRODUCTORSERVICENAME").length !== 0)
-//         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+        if(result.errors.filter((e) => e.msg.value === "PRODUCTORSERVICENAME").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
-//         if(result.errors.filter((e) => e.msg.value === "CATEGORY").length !== 0)
-//         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+        if(result.errors.filter((e) => e.msg.value === "QUANTITY").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
-//         if(result.errors.filter((e) => e.msg.value === "STOPSELLING").length !== 0)
-//         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+        if(result.errors.filter((e) => e.msg.value === "REFILLQUANTITY").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
 
-//         if(parseInt(data.category) < 0 || parseInt(data.category) > 1)
-//         return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: "Category must be at least 0 - 1 numbers !"}));
+        if(result.errors.filter((e) => e.msg.value === "PRICE").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+
+        if(result.errors.filter((e) => e.msg.value === "SELLINGPRICE").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+
+        if(result.errors.filter((e) => e.msg.value === "STOPSELLING").length !== 0)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: result.errors.map((e) => e.msg.error) }));
+
+        let productOrService_id = await ProductOrService.find({ product_or_service_name: data.product_or_service_name }).limit(1).select('_id');
+        productOrService_id = productOrService_id.length > 0 ? productOrService_id[0]._id : null;
+        if(productOrService_id === null)
+        return res.status(404).send(getNewResData(false, true, "Invalid quarts !", 404, { errors: ["Invalide product_or_service_name"]}));
         
-//         data["user_id"] = req.user._id;
-//         data["set_or_reset_date"] = getDate();
-//         data["set_or_reset_time"] = getTime();
-//         const newProductOrService = new ProductOrService(data);
-//         const saveProductOrService = await newProductOrService.save();
-//         return res.status(201).send(getNewResData(true, true, `Successfully added ${data.category === 0 ? "product" : "service"}`, 201, { item: saveProductOrService }));
+        data["user_id"] = req.user._id;
+        data["product_or_service_id"] = productOrService_id;
+        data["set_or_reset_date"] = getDate();
+        data["set_or_reset_time"] = getTime();
+        const newStock = new Stock(data);
+        const saveStock = await newStock.save();
+        return res.status(201).send(getNewResData(true, true, "Successfully added Stock", 201, { item: saveStock }));
     
-//     } catch(e) {
-//         console.log(e);
-//         return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
-//     }
-// });
+    } catch(e) {
+        console.log(e);
+        return res.status(400).send(getNewResData(false, true, "[ERROR]", 404, { errors: e }));
+    }
+});
 
 // // Super admin and Admin only
 // router.patch("/api/auth/productandservices/updateproductorservice", 
